@@ -139,7 +139,7 @@
 
     /* Temporizador más pequeño en celular */
   .timer-circle {
-    transform: scale(0.7);
+    transform: scale(0.3);
   }
 
 }
