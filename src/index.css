@@ -88,6 +88,24 @@
     height: 80px;
   }
 
+  /* 👇 NUEVO: texto de las casillas más pequeño */
+  .board-tile-label {
+    font-size: 0.60rem;
+    line-height: 0.85rem;
+    white-space: nowrap;
+  }
+
+  /* 👇 NUEVO: círculo del timer más pequeño en celu */
+  .timer-circle {
+    width: 9rem;   /* antes w-44 ≈ 11rem */
+    height: 9rem;
+  }
+
+  /* 👇 NUEVO: número del reloj un poco más chico */
+  .timer-circle .text-3xl {
+    font-size: 1.6rem;
+  }
+
   /* ---------- SETUP SCREEN ---------- */
 
   /* Contenedor raíz de la pantalla de configuración */
@@ -103,43 +121,5 @@
     margin-bottom: 12px;
   }
 
-  /* Tarjeta de configuración */
-  .setup-card {
-    padding: 12px;
-    border-radius: 18px;
-  }
-
-  .setup-card label {
-    font-size: 0.95rem;
-  }
-
-  /* Botones 1–4 (cantidad de jugadores) más compactos */
-  .player-count button {
-    width: 40px;
-    height: 40px;
-    font-size: 0.9rem;
-    margin: 2px;
-  }
-
-  /* Grilla de fichas: 3 columnas en celular */
-  .token-grid-setup {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .token-grid-setup img {
-    width: 52px;
-    height: 32px;
-  }
-
-  .token-grid-setup button {
-    padding: 6px;
-  }
-
-  /* Input de duración del juego más pequeño y proporcional */
-  .duration-input {
-    width: 96px;
-    font-size: 1rem;
-    padding: 4px 6px;
-  }
+  /* ... resto tal cual lo tienes ... */
 }
