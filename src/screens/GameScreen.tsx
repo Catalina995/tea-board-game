@@ -184,6 +184,7 @@ export default function GameScreen({
 
   // turno
   const [turn, setTurn] = useState(0);
+
   // misión/estado de juego
   const [active, setActive] = useState<ColorKey | null>(null);
   const [mission, setMission] = useState<Mission | null>(null);
@@ -435,7 +436,7 @@ export default function GameScreen({
       </div>
 
       {/* Tablero */}
-      <div className="relative w-full max-w-4xl aspect-square mx-auto">
+      <div className="relative w-full max-w-4xl aspect-square mx-auto board-wrapper">
         <Board active={active} pawns={pawns} />
         <TimerHUD remainingSec={timeLeft} totalSec={durationMin * 60} />
       </div>
