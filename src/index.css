@@ -1,70 +1,3 @@
-/* src/index.css */
-@import "tailwindcss";
-
-/* =========================================
-   DADO 3D (usado por ColorDie3D.tsx)
-   ========================================= */
-.dice-scene { perspective: 800px; }
-
-.dice {
-  width: 96px;
-  height: 96px;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 1.1s cubic-bezier(.2,.8,.2,1);
-  margin: 0 auto;
-}
-
-.dice .face {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: white;
-  border-radius: 0.75rem; /* esquinas redondeadas */
-  box-shadow: 0 10px 20px rgba(0,0,0,.25) inset;
-}
-
-/* Posicionamiento de las 6 caras respecto al centro del cubo */
-.dice .front  { transform: translateZ(48px); }
-.dice .back   { transform: rotateY(180deg) translateZ(48px); }
-.dice .right  { transform: rotateY( 90deg) translateZ(48px); }
-.dice .left   { transform: rotateY(-90deg) translateZ(48px); }
-.dice .top    { transform: rotateX( 90deg) translateZ(48px); }
-.dice .bottom { transform: rotateX(-90deg) translateZ(48px); }
-
-/* =========================================
-   ANIMACIÓN FICHAS (token “pop”)
-   ========================================= */
-@keyframes token-pop {
-  0%   { transform: scale(0.8); }
-  60%  { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
-.token-pop { animation: token-pop 350ms ease-out; }
-
-/* =========================================
-   MODAL (backdrop difuminado)
-   ========================================= */
-.modal-backdrop {
-  background: rgba(0,0,0,.25);
-  backdrop-filter: blur(2px);
-}
-
-/* =========================================
-   ANIMACIÓN DADO (giro suave 1 vuelta)
-   ========================================= */
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 0.6s linear 1;
-}
-
 /* =========================================
    AJUSTES SOLO PARA CELULAR
    ========================================= */
@@ -94,8 +27,30 @@
 
   /* Tablero más pequeño (Board + TimerHUD) */
   .board-wrapper {
-    transform: scale(0.75);
+    transform: scale(0.7);
     transform-origin: top center;
+  }
+
+  /* Reducir tamaños de texto dentro del tablero (tiles + timer) */
+  .board-wrapper .text-xs {
+    font-size: 0.55rem !important;
+  }
+
+  .board-wrapper .text-sm {
+    font-size: 0.65rem !important;
+  }
+
+  .board-wrapper .text-base {
+    font-size: 0.75rem !important;
+  }
+
+  .board-wrapper .text-lg,
+  .board-wrapper .text-xl,
+  .board-wrapper .text-2xl,
+  .board-wrapper .text-3xl,
+  .board-wrapper .text-4xl,
+  .board-wrapper .text-5xl {
+    font-size: 1.1rem !important; /* números del reloj más pequeños */
   }
 
   /* Dado 3D un poquito más chico */
@@ -104,21 +59,8 @@
     height: 80px;
   }
 
-  /* Texto de las casillas (por si el Board usa esta clase) */
-  .tile-label {
-    font-size: 0.58rem !important;
-    line-height: 0.9rem !important;
-    white-space: nowrap !important;
-  }
-
-  /* Espaciado entre casillas (si existe esta clase en Board) */
-  .board-tile {
-    margin: 1px !important;
-  }
-
   /* ---------- SETUP SCREEN ---------- */
 
-  /* Contenedor raíz de la pantalla de configuración */
   .setup-root {
     justify-content: flex-start;
     padding-top: 24px;
@@ -131,7 +73,6 @@
     margin-bottom: 12px;
   }
 
-  /* Tarjeta de configuración */
   .setup-card {
     padding: 12px;
     border-radius: 18px;
@@ -141,7 +82,6 @@
     font-size: 0.95rem;
   }
 
-  /* Botones 1–4 (cantidad de jugadores) más compactos */
   .player-count button {
     width: 40px;
     height: 40px;
@@ -149,7 +89,6 @@
     margin: 2px;
   }
 
-  /* Grilla de fichas: 3 columnas en celular */
   .token-grid-setup {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
@@ -164,7 +103,6 @@
     padding: 6px;
   }
 
-  /* Input de duración del juego más pequeño y proporcional */
   .duration-input {
     width: 96px;
     font-size: 1rem;
