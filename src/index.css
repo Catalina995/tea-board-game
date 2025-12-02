@@ -144,7 +144,7 @@
 
     /* Texto de casillas más pequeño en celular */
   .board-cell-label {
-    font-size: 0.17rem !important;
+    font-size: 0.19rem !important;
     line-height: 1.1 !important;
   }
 
