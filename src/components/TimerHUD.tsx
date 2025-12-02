@@ -16,7 +16,7 @@ export default function TimerHUD({ remainingSec, totalSec }: Props) {
 
   return (
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10 translate-y-[-50px] sm:translate-y-[-150px]">
-      <div className="relative w-44 h-44 rounded-full bg-white/70 backdrop-blur-sm shadow-lg flex items-center justify-center">
+      <div className="relative w-44 h-44 rounded-full bg-white/70 backdrop-blur-sm shadow-lg flex items-center justify-center timer-circle">
         {/* aro de progreso */}
         <div
           className="absolute inset-0 rounded-full"

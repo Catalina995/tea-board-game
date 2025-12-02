@@ -188,7 +188,7 @@ export default function Board({
               <div
                 key={key}
                 className={[
-                  "h-full w-full rounded-xl flex flex-col items-center justify-center text-center text-xs sm:text-sm md:text-base font-semibold p-2 shadow",
+                  "h-full w-full rounded-xl flex flex-col items-center justify-center text-center text-xs sm:text-sm md:text-base font-semibold p-2 shadow board-tile",
                   bgClass,
                   isActive ? "ring-4 ring-white scale-[1.03]" : "",
                 ].join(" ")}
@@ -215,7 +215,11 @@ export default function Board({
                 )}
 
                 {/* Texto del lugar (siempre, como querías) */}
-                <span className={isStartCell ? "mt-0.5" : ""}>{label}</span>
+                <span
+                  className={`board-tile-label ${isStartCell ? "mt-0.5" : ""}`}
+                >
+                  {label}
+                </span>
               </div>
             );
           })
