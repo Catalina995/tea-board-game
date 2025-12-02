@@ -215,7 +215,10 @@ export default function Board({
                 )}
 
                 {/* Texto del lugar (siempre, como querías) */}
-                <span className={isStartCell ? "mt-0.5" : ""}>{label}</span>
+                <span className={`board-cell-label ${isStartCell ? "mt-0.5" : ""}`}>
+                  {label}
+                </span>
+
               </div>
             );
           })

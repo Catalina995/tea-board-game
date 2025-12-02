@@ -139,7 +139,13 @@
 
     /* Temporizador más pequeño en celular */
   .timer-circle {
-    transform: scale(0.3);
+    transform: scale(0.4);
+  }
+
+    /* Texto de casillas más pequeño en celular */
+  .board-cell-label {
+    font-size: 0.65rem !important;
+    line-height: 1.1 !important;
   }
 
 }
