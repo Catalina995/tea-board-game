@@ -245,7 +245,6 @@ export default function GameScreen({
       return;
     }
 
-
     // Para otros colores: generamos misión según dificultad
     setMission(getMissionFor(color, difficulty));
   }
@@ -465,7 +464,6 @@ export default function GameScreen({
           onOpenCalc={handleOpenCalc}
         />
       )}
-
 
       {/* Acciones turno */}
       <div className="flex gap-3">

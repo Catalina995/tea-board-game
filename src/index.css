@@ -23,7 +23,7 @@
   justify-content: center;
   font-weight: 700;
   color: white;
-  border-radius: 0.75rem; /* esquinas redondeadas */
+  border-radius: 0.75rem;
   box-shadow: 0 10px 20px rgba(0,0,0,.25) inset;
 }
 
@@ -60,7 +60,6 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
-
 .animate-spin-slow {
   animation: spin-slow 0.6s linear 1;
 }
@@ -69,46 +68,27 @@
    AJUSTES SOLO PARA CELULAR
    ========================================= */
 @media (max-width: 480px) {
-  /* Ajuste general de padding en pantallas pequeñas */
+  /* Ajuste general */
   .min-h-screen {
     padding: 12px !important;
   }
 
   /* ---------- GAME SCREEN ---------- */
 
-  /* Tablero un poco más pequeño en celular */
+  /* Tablero más pequeño */
   .board-wrapper {
     transform: scale(0.75);
     transform-origin: top center;
   }
 
-  /* Dado 3D un poco más chico */
+  /* Dado más chico */
   .dice {
     width: 80px;
     height: 80px;
   }
 
-  /* 👇 NUEVO: texto de las casillas más pequeño */
-  .board-tile-label {
-    font-size: 0.60rem;
-    line-height: 0.85rem;
-    white-space: nowrap;
-  }
-
-  /* 👇 NUEVO: círculo del timer más pequeño en celu */
-  .timer-circle {
-    width: 9rem;   /* antes w-44 ≈ 11rem */
-    height: 9rem;
-  }
-
-  /* 👇 NUEVO: número del reloj un poco más chico */
-  .timer-circle .text-3xl {
-    font-size: 1.6rem;
-  }
-
   /* ---------- SETUP SCREEN ---------- */
 
-  /* Contenedor raíz de la pantalla de configuración */
   .setup-root {
     justify-content: flex-start;
     padding-top: 24px;
@@ -121,5 +101,39 @@
     margin-bottom: 12px;
   }
 
-  /* ... resto tal cual lo tienes ... */
+  .setup-card {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .setup-card label {
+    font-size: 0.95rem;
+  }
+
+  .player-count button {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+    margin: 2px;
+  }
+
+  .token-grid-setup {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .token-grid-setup img {
+    width: 52px;
+    height: 32px;
+  }
+
+  .token-grid-setup button {
+    padding: 6px;
+  }
+
+  .duration-input {
+    width: 96px;
+    font-size: 1rem;
+    padding: 4px 6px;
+  }
 }
