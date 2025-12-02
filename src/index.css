@@ -136,4 +136,10 @@
     font-size: 1rem;
     padding: 4px 6px;
   }
+
+    /* Temporizador más pequeño en celular */
+  .timer-circle {
+    transform: scale(0.7);
+  }
+
 }
