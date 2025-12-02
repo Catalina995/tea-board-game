@@ -16,19 +16,24 @@ export default function TimerHUD({ remainingSec, totalSec }: Props) {
 
   return (
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10 translate-y-[-50px] sm:translate-y-[-150px]">
-      <div className="relative w-44 h-44 rounded-full bg-white/70 backdrop-blur-sm shadow-lg flex items-center justify-center">
+      <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-white/70 backdrop-blur-sm shadow-lg flex items-center justify-center">
         {/* aro de progreso */}
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: `conic-gradient(${danger ? '#ef4444' : '#10b981'} ${pct * 360}deg, #e5e7eb 0deg)`,
-            WebkitMask: "radial-gradient(circle 64px at center, transparent 60px, black 61px)",
+            background: `conic-gradient(${danger ? "#ef4444" : "#10b981"} ${pct * 360}deg, #e5e7eb 0deg)`,
+            WebkitMask:
+              "radial-gradient(circle 64px at center, transparent 60px, black 61px)",
             mask: "radial-gradient(circle 64px at center, transparent 60px, black 61px)",
             borderRadius: "9999px",
           }}
         />
         {/* tiempo */}
-        <div className={`text-3xl font-bold ${danger ? "text-red-600" : "text-slate-800"}`}>
+        <div
+          className={`text-2xl sm:text-3xl font-bold ${
+            danger ? "text-red-600" : "text-slate-800"
+          }`}
+        >
           {fmt(remainingSec)}
         </div>
         <div className="absolute bottom-2 text-xs text-slate-600">
