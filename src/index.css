@@ -69,23 +69,51 @@
    AJUSTES SOLO PARA CELULAR
    ========================================= */
 @media (max-width: 480px) {
-  /* Ajuste general de padding en pantallas pequeñas */
+  /* Contenedor general: un poco menos de padding */
+  body {
+    margin: 0;
+  }
+
   .min-h-screen {
     padding: 12px !important;
   }
 
   /* ---------- GAME SCREEN ---------- */
 
-  /* Tablero un poco más pequeño en celular */
+  /* Header: título + timer en dos filas si es necesario */
+  .max-w-5xl.flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Tarjetas de jugador: más compactas en alto */
+  .max-w-5xl.grid > div {
+    padding: 8px;
+  }
+
+  /* Tablero más pequeño (Board + TimerHUD) */
   .board-wrapper {
-    transform: scale(0.82);
+    transform: scale(0.75);
     transform-origin: top center;
   }
 
-  /* Dado 3D más pequeño */
+  /* Dado 3D un poquito más chico */
   .dice {
     width: 80px;
     height: 80px;
+  }
+
+  /* Texto de las casillas (por si el Board usa esta clase) */
+  .tile-label {
+    font-size: 0.58rem !important;
+    line-height: 0.9rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* Espaciado entre casillas (si existe esta clase en Board) */
+  .board-tile {
+    margin: 1px !important;
   }
 
   /* ---------- SETUP SCREEN ---------- */
