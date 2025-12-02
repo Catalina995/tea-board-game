@@ -30,11 +30,14 @@ export default function MissionCard({
       {/* Descripción corta de la situación */}
       <div className="mt-1 text-sm text-gray-700">{mision.description}</div>
 
-      {/* Objetivo de dinero */}
+      {/* Objetivo de dinero (oculto para no dar la respuesta) */}
       <div className="mt-3">
         <div className="text-gray-600">Objetivo:</div>
-        <div className="text-2xl font-bold">{nf.format(mision.price)}</div>
+        <div className="text-sm text-gray-500">
+          Resuelve la misión construyendo el monto 🔢
+        </div>
       </div>
+
 
       {/* Botones */}
       <div className="mt-4 flex gap-2">
