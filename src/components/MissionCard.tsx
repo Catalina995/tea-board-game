@@ -13,11 +13,6 @@ export default function MissionCard({
   onAceptar: () => void;
   onOtra: () => void;
 }) {
-  const nf = new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    maximumFractionDigits: 0,
-  });
 
   return (
     <div className="rounded-xl bg-white shadow p-4 w-full max-w-xl mx-auto">
