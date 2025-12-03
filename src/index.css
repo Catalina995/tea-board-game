@@ -64,6 +64,12 @@
   animation: spin-slow 0.6s linear 1;
 }
 
+/* Tamaño base del temporizador en PC y tablet */
+.timer-circle {
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
 /* =========================================
    AJUSTES SOLO PARA CELULAR
    ========================================= */
