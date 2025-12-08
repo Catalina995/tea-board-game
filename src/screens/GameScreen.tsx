@@ -318,7 +318,12 @@ export default function GameScreen({
 
     if (totalEntregado === mission.price) {
       const saldoActual = totalJugador(pj);
-      const nuevoSaldo = Math.max(0, saldoActual - mission.price);
+
+      // 💡 Si la misión tiene definido un gasto real (spent), usamos eso.
+      // Si no, usamos price como antes para no romper las otras misiones.
+      const montoADescontar = mission.spent ?? mission.price;
+
+      const nuevoSaldo = Math.max(0, saldoActual - montoADescontar);
       pj.walletTotal = nuevoSaldo;
       pj.stars += 1;
 
@@ -327,9 +332,8 @@ export default function GameScreen({
         title: "¡Misión correcta!",
         message:
           `¡Bien hecho, ${pj.name}!\n\n` +
-          `Entregaste $${totalEntregado.toLocaleString(
-            "es-CL"
-          )} y se descontaron $${mission.price.toLocaleString(
+          `Entregaste $${totalEntregado.toLocaleString("es-CL")}` +
+          ` y se descontaron $${montoADescontar.toLocaleString(
             "es-CL"
           )} de tu billetera.`,
       });

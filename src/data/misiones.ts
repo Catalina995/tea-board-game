@@ -28,6 +28,7 @@ export type Mission = {
   price: number;        // monto que debe construir con billetes y monedas
   level: MissionDifficulty;
   kind: MissionKind;
+  spent?: number; //cuánto se descuenta de la billetera (GASTO REAL)
 };
 
 // =====================================================
@@ -109,7 +110,7 @@ export const MISSIONS: Mission[] = [
     kind: "suma",
   },
 
-  // ======== NIVEL INTERMEDIO (sumas + restas tipo “vuelto”) ========
+    // ======== NIVEL INTERMEDIO (sumas + restas tipo “vuelto”) ========
 
   // Supermercado (rojo)
   {
@@ -118,9 +119,10 @@ export const MISSIONS: Mission[] = [
     title: "Compra grande en el súper",
     description:
       "En el supermercado gastas $3.800 y pagas con un billete de $10.000. ¿Cuánto vuelto debes recibir? Construye SOLO el vuelto con billetes y monedas.",
-    price: 6200, // 10.000 - 3.800
+    price: 6200, // 10.000 - 3.800 (vuelto = RESPUESTA)
     level: "intermedio",
     kind: "resta",
+    spent: 3800, // 💰 lo que REALMENTE gastaste
   },
 
   // Feria (amarillo)
@@ -130,9 +132,10 @@ export const MISSIONS: Mission[] = [
     title: "Verduras frescas",
     description:
       "En la feria gastas $1.200 en verduras y pagas con $2.000. ¿Cuánto es el vuelto que deben darte?",
-    price: 800, // 2.000 - 1.200
+    price: 800,   // vuelto (RESPUESTA)
     level: "intermedio",
     kind: "resta",
+    spent: 1200,  // 💰 gasto real
   },
 
   // Panadería (verde)
@@ -142,9 +145,10 @@ export const MISSIONS: Mission[] = [
     title: "Panes y queques",
     description:
       "En la panadería gastas $2.750 en pan y pasteles, y pagas con $5.000. ¿Cuánto es el vuelto?",
-    price: 2250, // 5.000 - 2.750
+    price: 2250,  // vuelto
     level: "intermedio",
     kind: "resta",
+    spent: 2750,  // 💰 gasto real
   },
 
   // Banco (azul)
@@ -154,9 +158,10 @@ export const MISSIONS: Mission[] = [
     title: "Retiro de efectivo",
     description:
       "Tienes $5.000 en tu cuenta y retiras $1.200 para gastos. ¿Cuánto queda en la cuenta? Construye el monto que queda.",
-    price: 3800, // 5.000 - 1.200
+    price: 3800,  // saldo que queda en la cuenta (RESPUESTA)
     level: "intermedio",
     kind: "resta",
+    spent: 1200,  // 💰 lo que sacaste (lo que baja de tu “dinero disponible”)
   },
 
   // Almacén (morado)
@@ -166,9 +171,10 @@ export const MISSIONS: Mission[] = [
     title: "Compras del barrio",
     description:
       "En el almacén gastas $2.750 y pagas con $5.000. ¿Cuánto vuelto debes recibir?",
-    price: 2250, // 5.000 - 2.750
+    price: 2250,  // vuelto
     level: "intermedio",
     kind: "resta",
+    spent: 2750,  // 💰 gasto real
   },
 
   // Librería (naranjo)
@@ -178,9 +184,10 @@ export const MISSIONS: Mission[] = [
     title: "Pack de útiles",
     description:
       "Compras materiales por $3.250 y pagas con $8.000. ¿Cuánto es el vuelto?",
-    price: 4750, // 8.000 - 3.250
+    price: 4750,  // vuelto
     level: "intermedio",
     kind: "resta",
+    spent: 3250,  // 💰 gasto real
   },
 
   // ======== NIVEL AVANZADO (combinan suma, resta y multiplicación) ========
