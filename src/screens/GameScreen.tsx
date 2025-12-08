@@ -91,71 +91,54 @@ function totalJugador(p: Player) {
 
 // Evento especial cuando el jugador cae en una casilla Banco (color azul)
 function aplicarEventoBanco(players: Player[], turn: number) {
-  // Clonamos el arreglo de jugadores para no modificar el original directo
+  // clonamos el arreglo de jugadores
   const next = players.map((p) => ({ ...p }));
 
   const actual = next[turn];
-  const indiceDerecha = (turn + 1) % next.length;
-  const derecha = next[indiceDerecha];
-
-  // Saldos actuales
   const saldoActual =
     actual.walletTotal !== undefined
       ? actual.walletTotal
       : calcularTotal(actual.wallet);
 
-  const saldoDerecha =
-    derecha.walletTotal !== undefined
-      ? derecha.walletTotal
-      : calcularTotal(derecha.wallet);
-
-  // Elegimos un evento al azar (0, 1, 2 o 3)
-  const evento = Math.floor(Math.random() * 4);
+  // Elegimos un evento al azar (0, 1 o 2)
+  const evento = Math.floor(Math.random() * 3);
   let mensaje = "";
 
   switch (evento) {
     case 0: {
-      // Donas $1.000 al jugador de la derecha
+      // Comisión del banco
       const monto = 1000;
       actual.walletTotal = Math.max(0, saldoActual - monto);
-      derecha.walletTotal = saldoDerecha + monto;
-      mensaje = `${actual.name} dona $${monto.toLocaleString(
+      mensaje = `${actual.name} paga una comisión bancaria de $${monto.toLocaleString(
         "es-CL"
-      )} al jugador/a de la derecha (${derecha.name}).`;
+      )}.`;
       break;
     }
+
     case 1: {
-      // Pagas comisión al banco
-      const monto = 2000;
-      actual.walletTotal = Math.max(0, saldoActual - monto);
-      mensaje = `${actual.name} paga una comisión de $${monto.toLocaleString(
-        "es-CL"
-      )} al banco.`;
-      break;
-    }
-    case 2: {
-      // El banco te deposita dinero
+      // Error administrativo a favor del jugador
       const monto = 1500;
       actual.walletTotal = saldoActual + monto;
-      mensaje = `El banco deposita $${monto.toLocaleString(
+      mensaje = `Hubo un error administrativo y el banco abona $${monto.toLocaleString(
         "es-CL"
-      )} en la cuenta de ${actual.name}.`;
+      )} a ${actual.name}.`;
       break;
     }
-    case 3: {
-      // Colaboras con el compañero de la derecha
+
+    case 2: {
+      // Cargo por mantención
       const monto = 500;
       actual.walletTotal = Math.max(0, saldoActual - monto);
-      derecha.walletTotal = saldoDerecha + monto;
-      mensaje = `${actual.name} colabora con $${monto.toLocaleString(
+      mensaje = `${actual.name} paga un cargo por mantención de $${monto.toLocaleString(
         "es-CL"
-      )} para ayudar a ${derecha.name}.`;
+      )}.`;
       break;
     }
   }
 
   return { updatedPlayers: next, message: mensaje };
 }
+
 
 // 👉 Helper: misión según color y dificultad
 function getMissionFor(color: ColorKey, difficulty: Difficulty): Mission {
