@@ -235,9 +235,6 @@ export default function Calculator({
             0
           </Key>
           <Key onClick={() => append(",") }>,</Key>
-          <Key onClick={equal} variant="eq">
-            =
-          </Key>
         </div>
       </div>
     </Wrapper>
