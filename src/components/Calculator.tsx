@@ -177,7 +177,7 @@ export default function Calculator({
 
         {/* Display */}
         <div className="bg-orange-50 px-4 py-5">
-          <div className="text-right text-4xl font-semibold text-slate-900 select-all break-words">
+          <div className="text-right text-4xl font-semibold text-slate-900 select-all break-all">
             {expr}
           </div>
         </div>
