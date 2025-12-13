@@ -1,141 +1,146 @@
 // src/components/Calculator.tsx
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 type Mode = "modal" | "inline";
+
+type Props = {
+  open: boolean;
+  onClose: () => void;
+  mode?: Mode;        // "modal" o "inline"
+  className?: string; // para posicionar cuando es "inline"
+};
+
+// Evalúa una expresión SANITIZADA con paréntesis y %.
+// Soporta coma decimal (,) y lo convierte a punto.
+function evalExpression(expr: string): number {
+  // coma -> punto
+  let s = expr.replace(/,/g, ".");
+
+  // permitir solo números, operadores, paréntesis, punto, %, espacios
+  s = s.replace(/[^0-9+\-*/().% ]/g, "");
+
+  // convertir 50% => (50/100)
+  s = s.replace(/(\d+(\.\d+)?)%/g, "($1/100)");
+
+  // evitar expresión vacía
+  if (!s.trim()) s = "0";
+
+  // eslint-disable-next-line no-new-func
+  const fn = new Function(`"use strict"; return (${s});`);
+  const r = fn();
+  return typeof r === "number" && Number.isFinite(r) ? r : NaN;
+}
 
 export default function Calculator({
   open,
   onClose,
   mode = "modal",
   className = "",
-}: {
-  open: boolean;
-  onClose: () => void;
-  mode?: Mode;          // ← "modal" (pantalla completa) o "inline" (anclada)
-  className?: string;   // ← para posicionarla cuando es "inline"
-}) {
-  const [display, setDisplay] = useState("0");
-  const [prev, setPrev] = useState<string | null>(null);
-  const [op, setOp] = useState<null | "+" | "-" | "×" | "÷">(null);
+}: Props) {
+  const [expr, setExpr] = useState("0");
+  const [justEvaluated, setJustEvaluated] = useState(false);
 
-  // 🔹 Normaliza un string tipo "1.200,5" → 1200.5
-  const normalizeNumber = (s: string) => {
-    const clean = s.replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
-    const n = Number(clean);
-    return isNaN(n) ? 0 : n;
-  };
-
-  const fmt = (n: number) =>
-    !isFinite(n)
-      ? "Error"
-      : Number.isInteger(n)
-      ? n.toLocaleString("es-CL")
-      : n.toLocaleString("es-CL", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 4,
-        });
+  const nf = useMemo(
+    () =>
+      new Intl.NumberFormat("es-CL", {
+        maximumFractionDigits: 6,
+      }),
+    []
+  );
 
   useEffect(() => {
     if (!open) {
-      setDisplay("0");
-      setPrev(null);
-      setOp(null);
+      setExpr("0");
+      setJustEvaluated(false);
     }
   }, [open]);
 
-  function inputDigit(d: string) {
-    setDisplay((cur) => (cur === "0" || cur === "Error" ? d : cur + d));
+  const fmt = (n: number) =>
+    !Number.isFinite(n) ? "Error" : nf.format(n);
+
+  function clearAll() {
+    setExpr("0");
+    setJustEvaluated(false);
   }
 
-  function inputDot() {
-    setDisplay((cur) =>
-      cur.includes(",") || cur.includes(".") ? cur : cur + ","
-    );
+  function backspace() {
+    setExpr((cur) => {
+      if (cur === "Error") return "0";
+      if (cur.length <= 1) return "0";
+      const next = cur.slice(0, -1);
+      return next.trim() === "" ? "0" : next;
+    });
+    setJustEvaluated(false);
+  }
+
+  function append(value: string) {
+    setExpr((cur) => {
+      let next = cur;
+
+      // si recién evaluamos y viene un número o "(" => empezamos nuevo
+      if (justEvaluated && /[0-9(]/.test(value)) {
+        next = "0";
+      }
+
+      if (next === "Error") next = "0";
+
+      // si está en 0 y entra un dígito o coma, reemplaza
+      if (next === "0" && /[0-9,]/.test(value)) {
+        if (value === ",") return "0,";
+        return value;
+      }
+
+      return next + value;
+    });
+    setJustEvaluated(false);
+  }
+
+  function appendOperator(op: string) {
+    setExpr((cur) => {
+      if (cur === "Error") return "0";
+      // si termina en operador, reemplaza (evita ++, **, etc.)
+      if (/[+\-*/]$/.test(cur.trim())) {
+        return cur.trim().slice(0, -1) + op;
+      }
+      return cur + op;
+    });
+    setJustEvaluated(false);
   }
 
   function toggleSign() {
-    setDisplay((cur) =>
-      cur.startsWith("-") ? cur.slice(1) : cur === "0" ? "0" : "-" + cur
-    );
-  }
-
-  function clearAll() {
-    setDisplay("0");
-    setPrev(null);
-    setOp(null);
+    // Cambia el signo de toda la expresión (simple y útil)
+    setExpr((cur) => {
+      if (cur === "0" || cur === "Error") return "0";
+      return cur.startsWith("-") ? cur.slice(1) : "-" + cur;
+    });
+    setJustEvaluated(false);
   }
 
   function percent() {
-    const n = normalizeNumber(display);
-    setDisplay(fmt(n / 100));
-  }
-
-  function chooseOp(next: "+" | "-" | "×" | "÷") {
-    if (display === "Error") return;
-
-    // Si ya había una operación pendiente, primero la resolvemos
-    if (prev !== null && op) {
-      const a = normalizeNumber(prev);
-      const b = normalizeNumber(display);
-
-      let res = 0;
-      switch (op) {
-        case "+":
-          res = a + b;
-          break;
-        case "-":
-          res = a - b;
-          break;
-        case "×":
-          res = a * b;
-          break;
-        case "÷":
-          res = b === 0 ? NaN : a / b;
-          break;
-      }
-
-      const formatted = fmt(res);
-      setPrev(formatted);
-      setDisplay("0");
-      setOp(next);
-    } else {
-      setOp(next);
-      setPrev(display);
-      setDisplay("0");
-    }
+    // Agrega % al final (lo interpreta como /100 al evaluar)
+    setExpr((cur) => (cur === "Error" ? "0" : cur + "%"));
+    setJustEvaluated(false);
   }
 
   function equal() {
-    if (prev === null || !op) return;
-
-    const a = normalizeNumber(prev);
-    const b = normalizeNumber(display);
-    let res = 0;
-
-    switch (op) {
-      case "+":
-        res = a + b;
-        break;
-      case "-":
-        res = a - b;
-        break;
-      case "×":
-        res = a * b;
-        break;
-      case "÷":
-        res = b === 0 ? NaN : a / b;
-        break;
+    try {
+      const res = evalExpression(expr);
+      if (isNaN(res)) {
+        setExpr("Error");
+      } else {
+        setExpr(fmt(res));
+      }
+      setJustEvaluated(true);
+    } catch {
+      setExpr("Error");
+      setJustEvaluated(true);
     }
-
-    setDisplay(fmt(res));
-    setPrev(null);
-    setOp(null);
   }
 
   if (!open) return null;
 
-  // contenedor según modo
-    const Wrapper: React.FC<{ children: React.ReactNode }> =
+  // Wrapper según modo
+  const Wrapper: React.FC<{ children: React.ReactNode }> =
     mode === "modal"
       ? ({ children }) => (
           <div
@@ -143,27 +148,22 @@ export default function Calculator({
             role="dialog"
             aria-modal="true"
           >
-            {/* Fondo oscuro que cierra al hacer clic */}
             <div
               className="absolute inset-0 bg-black/40"
               onClick={onClose}
               aria-hidden="true"
             />
-            {/* Calculadora por encima del fondo */}
-            <div className="relative z-10">
-              {children}
-            </div>
+            <div className="relative z-10">{children}</div>
           </div>
         )
       : ({ children }) => (
           <div className={`absolute z-30 ${className}`}>{children}</div>
         );
 
-
   return (
     <Wrapper>
       <div className="w-[min(92vw,420px)] bg-white rounded-xl shadow-2xl overflow-hidden">
-        {/* Header naranja */}
+        {/* Header */}
         <div className="flex items-center justify-between bg-orange-600 text-white px-4 py-3">
           <div className="font-semibold">Calculadora</div>
           <button
@@ -177,14 +177,9 @@ export default function Calculator({
 
         {/* Display */}
         <div className="bg-orange-50 px-4 py-5">
-          <div className="text-right text-4xl font-semibold text-slate-900 select-all">
-            {display}
+          <div className="text-right text-4xl font-semibold text-slate-900 select-all break-words">
+            {expr}
           </div>
-          {op && prev !== null && (
-            <div className="text-right text-sm text-slate-500 mt-1">
-              {prev} {op}
-            </div>
-          )}
         </div>
 
         {/* Teclado */}
@@ -198,35 +193,48 @@ export default function Calculator({
           <Key onClick={percent} variant="ghost">
             %
           </Key>
-          <Key onClick={() => chooseOp("÷")} variant="op">
+          <Key onClick={() => appendOperator("/")} variant="op">
             ÷
           </Key>
 
-          <Key onClick={() => inputDigit("7")}>7</Key>
-          <Key onClick={() => inputDigit("8")}>8</Key>
-          <Key onClick={() => inputDigit("9")}>9</Key>
-          <Key onClick={() => chooseOp("×")} variant="op">
+          <Key onClick={() => append("(")} variant="ghost">
+            (
+          </Key>
+          <Key onClick={() => append(")")} variant="ghost">
+            )
+          </Key>
+          <Key onClick={backspace} variant="ghost">
+            ⌫
+          </Key>
+          <Key onClick={() => appendOperator("*")} variant="op">
             ×
           </Key>
 
-          <Key onClick={() => inputDigit("4")}>4</Key>
-          <Key onClick={() => inputDigit("5")}>5</Key>
-          <Key onClick={() => inputDigit("6")}>6</Key>
-          <Key onClick={() => chooseOp("-")} variant="op">
+          <Key onClick={() => append("7")}>7</Key>
+          <Key onClick={() => append("8")}>8</Key>
+          <Key onClick={() => append("9")}>9</Key>
+          <Key onClick={() => appendOperator("-")} variant="op">
             −
           </Key>
 
-          <Key onClick={() => inputDigit("1")}>1</Key>
-          <Key onClick={() => inputDigit("2")}>2</Key>
-          <Key onClick={() => inputDigit("3")}>3</Key>
-          <Key onClick={() => chooseOp("+")} variant="op">
+          <Key onClick={() => append("4")}>4</Key>
+          <Key onClick={() => append("5")}>5</Key>
+          <Key onClick={() => append("6")}>6</Key>
+          <Key onClick={() => appendOperator("+")} variant="op">
             +
           </Key>
 
-          <Key onClick={() => inputDigit("0")} className="col-span-2">
+          <Key onClick={() => append("1")}>1</Key>
+          <Key onClick={() => append("2")}>2</Key>
+          <Key onClick={() => append("3")}>3</Key>
+          <Key onClick={equal} variant="eq">
+            =
+          </Key>
+
+          <Key onClick={() => append("0")} className="col-span-2">
             0
           </Key>
-          <Key onClick={inputDot}>,</Key>
+          <Key onClick={() => append(",") }>,</Key>
           <Key onClick={equal} variant="eq">
             =
           </Key>
